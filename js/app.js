@@ -81,6 +81,16 @@ class CortexApp {
     }
 
     async checkStatus() {
+        // TOU gate: must be accepted BEFORE the API key is transmitted.
+        if (!TOU.gatePasses()) {
+            const accepted = await TOU.show();
+            if (!accepted) {
+                document.getElementById('status-result').innerHTML =
+                    '<p class="error">You must accept the Terms of Use to check agent status.</p>';
+                return;
+            }
+        }
+
         const agentName = document.getElementById('agent-name').value;
         const apiKey = document.getElementById('api-key').value;
 

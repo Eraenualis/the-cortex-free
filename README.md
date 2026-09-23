@@ -48,3 +48,22 @@ Edit `data/agents.json` and push. The site refreshes automatically.
 ## License
 
 MIT — free to use, modify, distribute.
+
+## Forking This Repo
+
+MIT licensed — fork freely. **But deploy your own CORS proxy.**
+
+The frontend calls VORTEX's API through a Cloudflare Worker proxy
+(`the-cortex-free-proxy`, separate repo). Our deployed proxy is
+origin-locked to our own domains and rate-limited by Cloudflare's free
+tier (100K req/day). A fork pointing at our proxy will not work and
+would exhaust our quota if it did.
+
+To fork properly:
+1. Copy `the-cortex-free-proxy` (or write your own — it's ~100 lines)
+2. `wrangler deploy` it to your Cloudflare account
+3. Change the `proxyUrl` default in `js/api.js` to your worker URL
+
+## License
+
+MIT — see [LICENSE](LICENSE). Attribution appreciated but not (legally) required.
