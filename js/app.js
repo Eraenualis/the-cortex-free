@@ -89,6 +89,15 @@ class CortexApp {
         ).join('');
     }
 
+    // Template render with graceful fallback if Mustache failed to load
+    render(template, data) {
+        if (typeof Mustache !== 'undefined') {
+            return Mustache.render(template, data);
+        }
+        // Fallback: simple {{key}} substitution
+        return template.replace(/{{(\w+)}}/g, (m, key) => data[key] !== undefined ? data[key] : '');
+    }
+
     async checkStatus() {
         // TOU gate: must be accepted BEFORE the API key is transmitted.
         if (!TOU.gatePasses()) {
@@ -145,7 +154,7 @@ class CortexApp {
             };
 
             document.getElementById('status-result').innerHTML =
-                Mustache.render(this.templates.statusResult, result);
+                this.render(this.templates.statusResult, result);
         } catch (e) {
             document.getElementById('status-result').innerHTML =
                 `<p class="error">Error: ${e.message}</p>`;
