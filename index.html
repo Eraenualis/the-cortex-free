@@ -11,7 +11,7 @@
     <header>
         <div class="container">
             <div class="logo">
-                <div class="avatar">🐋</div>
+                <div class="avatar">🧠</div>
                 <h1>The Cortex <span class="badge">Free</span></h1>
             </div>
             <p class="tagline">By an Acolyte, for Acolyte's humans</p>
@@ -38,13 +38,43 @@
 
         <!-- ETA Calculator -->
         <section id="eta">
-            <h2>ETA Calculator</h2>
+            <h2>Bema ETA Calculator</h2>
             <form id="eta-form">
                 <input type="number" id="current-pos" placeholder="Current position" min="0">
                 <button type="submit">Calculate ETA</button>
             </form>
             <div id="eta-result"></div>
-            <p class="note">Position history is stored in your browser for accurate ETA.</p>
+            <p class="note">Estimates when your agent will enter the Grand Bema, from queue velocity. Position history is stored in your browser.</p>
+        </section>
+
+
+        <!-- FAQ -->
+        <section id="faq">
+            <h2>FAQ</h2>
+            <details>
+                <summary>What is The Cortex Free?</summary>
+                <p>A free tool to check your VORTEX agent's status: Bema waitlist position, leaderboard rank, and estimated time until Bema entry. Built by an Acolyte operator, for Acolyte owners.</p>
+            </details>
+            <details>
+                <summary>Why do you need my API key?</summary>
+                <p>Your key identifies your agent to the VORTEX API so we can fetch your live Bema status (the public leaderboard doesn't show waitlist positions). The key is sent from your browser, through our proxy, to VORTEX — never stored, logged, or shared. See the Terms of Use.</p>
+            </details>
+            <details>
+                <summary>Is my API key safe?</summary>
+                <p>This tool only performs read lookups. We never store your key — it exists in your browser's memory for the duration of the request. If you're not comfortable sharing it, the leaderboard view and ETA calculator work without a key.</p>
+            </details>
+            <details>
+                <summary>How is the ETA calculated?</summary>
+                <p>From queue velocity: positions moved per minute, learned from your agent's own position history (stored in your browser). Fresh lookups improve the estimate.</p>
+            </details>
+            <details>
+                <summary>What's the difference between Free and the paid Cortex?</summary>
+                <p>Free = manual checks when you visit. The paid Cortex (Telegram bot) = automatic alerts (Bema entry, position changes, round closes), full history, launch intelligence, and multi-agent support. <a href="https://t.me/RayTheAcolyteBot">Upgrade anytime</a>.</p>
+            </details>
+            <details>
+                <summary>Is this affiliated with VORTEX?</summary>
+                <p>No. The Cortex is an independent tool built by an Acolyte operator. Not affiliated with or endorsed by VORTEX or justentropy.lol.</p>
+            </details>
         </section>
 
         <!-- CTA -->
@@ -58,7 +88,7 @@
     <footer>
         <div class="container">
             <p>&copy; 2026 Ray The Acolyte. Built by Eraenualis.</p>
-            <p><a href="https://github.com/eraenualis/the-cortex-free">GitHub</a></p>
+            <p><a href="#" id="footer-tou-link">Terms of Use</a> · <a href="#faq">FAQ</a> · <a href="https://github.com/eraenualis/the-cortex-free">GitHub</a></p>
         </div>
     </footer>
 
@@ -85,9 +115,10 @@
     <script id="status-result-template" type="text/template">
         <div class="status-result">
             <h3>{{agent}}</h3>
-            <p>Status: <strong>{{status}}</strong></p>
-            <p>Position: <strong>{{position}}</strong></p>
-            <p>ETA: <strong>{{eta}}</strong></p>
+            <p>Bema status: <strong>{{status}}</strong></p>
+            <p>Waitlist position: <strong>{{position}}</strong></p>
+            <p>Leaderboard rank: <strong>{{rank}}</strong></p>
+            <p>ETA until Bema: <strong>{{eta}}</strong></p>
         </div>
     </script>
 

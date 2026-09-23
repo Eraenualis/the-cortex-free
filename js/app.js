@@ -38,6 +38,15 @@ class CortexApp {
             this.checkStatus();
         });
 
+        // Footer TOU link: re-open the Terms of Use modal anytime
+        const touLink = document.getElementById('footer-tou-link');
+        if (touLink) {
+            touLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                TOU.show();
+            });
+        }
+
         document.getElementById('eta-form').addEventListener('submit', (e) => {
             e.preventDefault();
             this.calculateETA();
@@ -95,34 +104,50 @@ class CortexApp {
         const apiKey = document.getElementById('api-key').value;
 
         try {
-            // Find agent in leaderboard (uses 30-min cache)
-            const agent = await this.api.vortex.findAgent(agentName, 100);
+            // PRIMARY: live Bema status via the API key (works for ANY agent,
+            // not just top-100). Position/status straight from VORTEX.
+            const bema = await this.api.vortex.getBemaStatus(apiKey);
 
-            if (!agent) {
-                document.getElementById('status-result').innerHTML = 
-                    `<p class="error">${agentName} not found in top 100. Check name or try again later.</p>`;
+            if (!bema || bema.error) {
+                const msg = (bema && bema.error && bema.error.message) || 'Lookup failed';
+                document.getElementById('status-result').innerHTML =
+                    `<p class="error">${msg}. Check your agent name and API key.</p>`;
                 return;
             }
 
-            // Store position in localStorage for ETA
-            const storage = Storage.get(agentName);
-            storage.add(agent.position);
+            // SECONDARY: leaderboard search for rank display (top 100 only)
+            const board = await this.api.vortex.findAgent(agentName, 100);
+            const rank = board ? board.rank : null;
 
-            // Calculate ETA from history
-            const velocity = storage.calculateVelocity();
-            const eta = Math.round(agent.position * velocity);
+            const state = bema.status; // waitlisted | active | active_closed | not_requested
+            const position = bema.position;
+            const statusText = {
+                'waitlisted': 'Waitlisted',
+                'active': 'Active in Bema',
+                'active_closed': 'In Bema (round closed, read-only)',
+                'not_requested': 'Not on the waitlist'
+            }[state] || state;
+
+            // Store position for ETA (only meaningful while waitlisted)
+            if (state === 'waitlisted' && typeof position === 'number' && position > 0) {
+                const storage = Storage.get(agentName);
+                storage.add(position);
+                const velocity = storage.calculateVelocity();
+                var etaMin = Math.round(position * velocity);
+            }
 
             const result = {
                 agent: agentName,
-                status: agent.position === 0 ? 'Active' : 'Waitlisted',
-                position: agent.position,
-                eta: eta ? `${eta} min` : 'N/A'
+                status: statusText,
+                position: (state === 'waitlisted' || state === 'active') ? position : '—',
+                rank: rank ? `#${rank}` : 'not in top 100',
+                eta: (state === 'waitlisted' && etaMin) ? `${etaMin} min` : '—'
             };
 
-            document.getElementById('status-result').innerHTML = 
+            document.getElementById('status-result').innerHTML =
                 Mustache.render(this.templates.statusResult, result);
         } catch (e) {
-            document.getElementById('status-result').innerHTML = 
+            document.getElementById('status-result').innerHTML =
                 `<p class="error">Error: ${e.message}</p>`;
         }
     }
@@ -140,7 +165,7 @@ class CortexApp {
         const mins = etaMin % 60;
 
         document.getElementById('eta-result').innerHTML = 
-            `<p>Estimated time: <strong>${hours}h ${mins}m</strong></p>`;
+            `<p>ETA until Bema: <strong>${hours}h ${mins}m</strong></p>`;
     }
 }
 
