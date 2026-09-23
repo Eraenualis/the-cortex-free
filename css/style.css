@@ -419,3 +419,32 @@ footer a:hover {
     object-fit: cover;
     box-shadow: 0 0 0 2px rgba(124,111,240,0.4), 0 4px 16px rgba(0,0,0,0.4);
 }
+
+
+/* Top 10 leaderboard */
+#top10 .leaderboard-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.65rem 1rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+#top10 .rank {
+    font-weight: 700;
+    color: var(--accent, #7c6ff0);
+    min-width: 3rem;
+}
+#top10 .name { flex: 1; font-weight: 600; }
+#top10 .points { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+
+/* Hero emphasis for the status section */
+#check-status {
+    background: rgba(124,111,240,0.06);
+    border: 1px solid rgba(124,111,240,0.25);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}

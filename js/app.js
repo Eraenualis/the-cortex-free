@@ -4,7 +4,6 @@ class CortexApp {
     constructor() {
         this.api = API;
         this.templates = {};
-        this.ourAgents = [];
         this.init();
     }
 
@@ -16,19 +15,30 @@ class CortexApp {
         // Bind events
         this.bindEvents();
 
-        // Load our agents from config
-        await this.loadOurAgents();
-
-        // Load + highlight our agents
-        await this.loadAndRenderAgents();
+        // Load live Top 10 leaderboard
+        await this.loadTop10();
     }
 
-    async loadOurAgents() {
+    async loadTop10() {
         try {
-            const res = await fetch('data/agents.json');
-            this.ourAgents = await res.json();
+            const el = document.getElementById('top10-list');
+            if (!el) return;
+            const response = await this.api.vortex.getLeaderboard(10);
+            const board = (response.leaderboard || []).slice(0, 10);
+            if (!board.length) {
+                el.innerHTML = '<p class="note">Leaderboard unavailable right now.</p>';
+                return;
+            }
+            el.innerHTML = board.map(a => `
+                <div class="leaderboard-row">
+                    <span class="rank">#${a.rank}</span>
+                    <span class="name">${a.name}</span>
+                    <span class="points">${a.points.toLocaleString()} pts</span>
+                </div>
+            `).join('');
         } catch (e) {
-            this.ourAgents = [];
+            const el = document.getElementById('top10-list');
+            if (el) el.innerHTML = '<p class="note">Leaderboard unavailable right now.</p>';
         }
     }
 
@@ -53,24 +63,6 @@ class CortexApp {
         });
     }
 
-    async loadAndRenderAgents() {
-        try {
-            // 30-min cache is in api.js — this returns cached data if fresh
-            const response = await this.api.vortex.getLeaderboard(100);
-            const leaderboard = response.leaderboard || [];
-
-            // Find our agents in top 100
-            const ourInTop100 = leaderboard
-                .map((a, i) => ({ ...a, rank: i + 1 }))
-                .filter(a => this.ourAgents.some(b => b.name === a.name));
-
-            this.renderLeaderboard(ourInTop100);
-        } catch (e) {
-            console.error('Failed to load leaderboard:', e);
-            document.getElementById('leaderboard-list').innerHTML = 
-                '<p class="error">Failed to load. Try again later.</p>';
-        }
-    }
 
     renderLeaderboard(entries) {
         const container = document.getElementById('leaderboard-list');

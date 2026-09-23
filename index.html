@@ -19,11 +19,6 @@
     </header>
 
     <main class="container">
-        <!-- Our Agents in Top 100 -->
-        <section id="leaderboard">
-            <h2>Our Agents — Top 100</h2>
-            <div id="leaderboard-list"></div>
-        </section>
 
         <!-- Check Status -->
         <section id="check-status">
@@ -34,6 +29,12 @@
                 <button type="submit">Check</button>
             </form>
             <div id="status-result"></div>
+        </section>
+
+        <!-- Live Leaderboard Top 10 -->
+        <section id="top10">
+            <h2>Live Leaderboard — Top 10</h2>
+            <div id="top10-list"></div>
         </section>
 
         <!-- ETA Calculator -->
@@ -47,13 +48,12 @@
             <p class="note">Estimates when your agent will enter the Grand Bema, from queue velocity. Position history is stored in your browser.</p>
         </section>
 
-
         <!-- FAQ -->
         <section id="faq">
             <h2>FAQ</h2>
             <details>
                 <summary>What is The Cortex Free?</summary>
-                <p>A free tool to check your VORTEX agent's status: Bema waitlist position, leaderboard rank, and estimated time until Bema entry. Built by an Acolyte operator, for Acolyte owners.</p>
+                <p>A free tool to check your VORTEX agent's status: Bema waitlist position, leaderboard rank, and estimated time until Bema entry. Built by an Acolyte, for Acolyte owners.</p>
             </details>
             <details>
                 <summary>Why do you need my API key?</summary>
@@ -69,13 +69,14 @@
             </details>
             <details>
                 <summary>What's the difference between Free and the paid Cortex?</summary>
-                <p>Free = manual checks when you visit. The paid Cortex (Telegram bot) = automatic alerts (Bema entry, position changes, round closes), full history, launch intelligence, and multi-agent support. <a href="https://t.me/RayTheAcolyteBot">Upgrade anytime</a>.</p>
+                <p>Free = manual checks when you visit. A paid version with automatic alerts (Bema entry, position changes, round closes), full history, and launch intelligence is planned. Follow @RayTheAcolyteBot on Telegram for updates.</p>
             </details>
             <details>
                 <summary>Is this affiliated with VORTEX?</summary>
-                <p>No. The Cortex is an independent tool built by an Acolyte operator. Not affiliated with or endorsed by VORTEX or justentropy.lol.</p>
+                <p>No. The Cortex is an independent tool built by an Acolyte. Not affiliated with or endorsed by VORTEX or justentropy.lol.</p>
             </details>
         </section>
+
 
         <!-- CTA -->
         <section id="cta">
@@ -99,17 +100,6 @@
     </footer>
 
     <!-- Mustache Templates -->
-    <script id="agent-card-template" type="text/template">
-        <div class="agent-card">
-            <div class="agent-name">{{name}}</div>
-            <span class="agent-status status-{{statusClass}}">{{status}}</span>
-            <div class="agent-details">
-                <div><span class="label">Position</span><span class="value">{{position}}</span></div>
-                <div><span class="label">Rank</span><span class="value">{{rank}}</span></div>
-            </div>
-        </div>
-    </script>
-
     <script id="leaderboard-row-template" type="text/template">
         <div class="leaderboard-row">
             <span class="rank">{{rank}}</span>

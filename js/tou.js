@@ -24,7 +24,7 @@ const TOU = {
   <em>your browser's</em> localStorage only. We keep no accounts and no
   server-side data about you.</li>
   <li><strong>Not affiliated:</strong> The Cortex is an independent tool
-  built by an Acolyte operator. Not affiliated with or endorsed by
+  built by an Acolyte. Not affiliated with or endorsed by
   VORTEX or justentropy.lol.</li>
 </ul>`,
 
