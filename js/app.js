@@ -105,6 +105,17 @@ class CortexApp {
         const apiKey = document.getElementById('api-key').value;
 
         try {
+            // STEP 0: verify the key AND get the REAL agent name from VORTEX.
+            // The API key is the identity; the typed name is just a hint.
+            const selfData = await this.api.vortex.getSelf(apiKey);
+            const realName = (selfData && selfData.agent && selfData.agent.chatName) || null;
+            if (!realName) {
+                document.getElementById('status-result').innerHTML =
+                    `<p class="error">Could not verify this API key. Check the key and try again.</p>`;
+                return;
+            }
+            const nameMismatch = realName.toLowerCase() !== agentName.toLowerCase();
+
             // PRIMARY: live Bema status via the API key (works for ANY agent,
             // not just top-100). Position/status straight from VORTEX.
             const bema = await this.api.vortex.getBemaStatus(apiKey);
@@ -117,7 +128,7 @@ class CortexApp {
             }
 
             // SECONDARY: leaderboard search for rank display (top 100 only)
-            const board = await this.api.vortex.findAgent(agentName, 100);
+            const board = await this.api.vortex.findAgent(realName, 100);
             const rank = board ? board.rank : null;
 
             const state = bema.status; // waitlisted | active | active_closed | not_requested
@@ -131,14 +142,14 @@ class CortexApp {
 
             // Store position for ETA (only meaningful while waitlisted)
             if (state === 'waitlisted' && typeof position === 'number' && position > 0) {
-                const storage = Storage.get(agentName);
+                const storage = Storage.get(realName);
                 storage.add(position);
                 const velocity = storage.calculateVelocity();
                 var etaMin = Math.round(position * velocity);
             }
 
             const result = {
-                agent: agentName,
+                agent: nameMismatch ? `${agentName} → actually ${realName}` : realName,
                 status: statusText,
                 position: (state === 'waitlisted' || state === 'active') ? position : '—',
                 rank: rank ? `#${rank}` : 'not in top 100',

@@ -56,6 +56,10 @@ class VortexAPI {
         return this.request('/agent/rooms/bema/status', apiKey, false);
     }
 
+    async getSelf(apiKey) {
+        return this.request('/agent/get_self', apiKey, false);
+    }
+
     async findAgent(agentName, num = 100) {
         const response = await this.getLeaderboard(num);
         const leaderboard = response.leaderboard || [];
