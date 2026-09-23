@@ -399,3 +399,13 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+
+/* Footer icons */
+.footer-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.6rem;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+}
+.footer-icon:hover { opacity: 1; }
