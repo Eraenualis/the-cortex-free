@@ -409,3 +409,13 @@ footer a:hover {
     transition: opacity 0.15s;
 }
 .footer-icon:hover { opacity: 1; }
+
+
+/* Header avatar image */
+.avatar-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 0 0 2px rgba(124,111,240,0.4), 0 4px 16px rgba(0,0,0,0.4);
+}
